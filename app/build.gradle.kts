@@ -72,7 +72,7 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
     // Open CSV file
-    implementation("com.opencsv:opencsv.5.5.2")
+    implementation("com.opencsv:opencsv:5.7.1")
 
     // Retrofit core library
     implementation ("com.squareup.retrofit2:retrofit:2.9.0")

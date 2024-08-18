@@ -1,5 +1,6 @@
 package com.example.stocksapp.data.csv
 
+import com.opencsv.CSVReader
 import com.example.stocksapp.domain.model.CompanyListing
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -19,6 +20,15 @@ class CompanyListingsParser @Inject constructor(): CSVParser<CompanyListing>{
                     val symbol = line.getOrNull(0)
                     val name = line.getOrNull(1)
                     val exchange = line.getOrNull(2)
+
+                    CompanyListing(
+                        name = name ?: return@mapNotNull null,
+                        symbol = symbol ?: return@mapNotNull null,
+                        exchange = exchange ?: return@mapNotNull null
+                    )
+                }
+                .also{
+                    csvReader.close()
                 }
         }
     }
