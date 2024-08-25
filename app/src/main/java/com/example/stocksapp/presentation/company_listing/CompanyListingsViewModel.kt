@@ -1,6 +1,5 @@
 package com.example.stocksapp.presentation.company_listing
 
-import android.view.View
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -21,12 +20,17 @@ class CompanyListingsViewModel @Inject constructor(
 
     var state by mutableStateOf(CompanyListingState())
 
+    init {
+        getCompanyListings()
+    }
+
     private var searchJob: Job? = null
-    fun onEvent(event: CompanyListingsEvent){
-        when(event){
+    fun onEvent(event: CompanyListingsEvent) {
+        when (event) {
             is CompanyListingsEvent.Refresh -> {
                 getCompanyListings(fetchFromRemote = true)
             }
+
             is CompanyListingsEvent.OnSearchQueryChange -> {
                 state = state.copy(searchQuery = event.query)
                 searchJob?.cancel()
@@ -38,23 +42,24 @@ class CompanyListingsViewModel @Inject constructor(
         }
     }
 
-    fun getCompanyListings(
-        query:String = state.searchQuery.lowercase(),
+    private fun getCompanyListings(
+        query: String = state.searchQuery.lowercase(),
         fetchFromRemote: Boolean = false
-    ){
+    ) {
         viewModelScope.launch {
             repository
                 .getCompanyListings(fetchFromRemote, query)
-                .collect{result ->
-                    when(result){
+                .collect { result ->
+                    when (result) {
                         is Resource.Success -> {
-                            result.data?.let {listings ->
+                            result.data?.let { listings ->
                                 state = state.copy(
                                     companies = listings
                                 )
 
                             }
                         }
+
                         is Resource.Error -> Unit
                         is Resource.Loading -> {
 
